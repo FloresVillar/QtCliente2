@@ -6,6 +6,10 @@ Client::Client(QWidget *parent)
     , ui(new Ui::Client)
 {
     ui->setupUi(this);
+    //inicializar clientSocket
+    clientSocket =new QTcpSocket(this);
+ //inicializar in
+    in.setDevice(clientSocket);
     connect(ui->pBtn_close,&QAbstractButton::clicked,this,&QWidget::close);
     connect(clientSocket,&QIODevice::readyRead,this,&Client::readMessage);
     connect(ui->pBtn_connect,&QAbstractButton::clicked,this,&Client::requestMessage);
