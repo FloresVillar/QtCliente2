@@ -8,25 +8,53 @@ Client::Client(QWidget *parent)
     ui->setupUi(this);
     connect(ui->pBtn_close,&QAbstractButton::clicked,this,&QWidget::close);
     connect(clientSocket,&QIODevice::readyRead,this,&Client::readMessage);
+    connect(ui->pBtn_connect,&QAbstractButton::clicked,this,&Client::requestMessage);
 }
 
 Client::~Client()
 {
     delete ui;
 }
-
-void Client::requesMessage()
+/**
+ * @brief Client::requesMessage
+ *este slot inicia la comunicacion con el servidor
+ *y se solicita un mensaje
+ */
+void Client::requestMessage()
 {
+    qDebug()<<"inciando requestMessage() ";
+    QString ipAddres = ui->lEdit_ip->text();
+    QString port = ui->lEdit_port->text();
+    qDebug()<<"ipAddress: "<<ipAddres<<" ,: "<<port;
+    clientSocket->connectToHost(ipAddres,port.toInt());//si esto fallara....
+
+    qDebug()<<"saliendo de requestMessage";
 
 }
-
+/**
+ * @brief Client::showError
+ *
+ */
 void Client::showError()
 {
 
 }
-
+/**
+ * @brief Client::readMessage
+ * el cliente inicia la lectura del mensaje que ha llegado al cliente
+ */
 void Client::readMessage()
 {
+    qDebug()<<"iniciando readMessage() ";
+    in.startTransaction();
+    qDebug()<<"finalizanco readMessage()";
+    QString message=" ";
+    in>>message;
+    if(!in.commitTransaction()){
+        qDebug()<<"error";
+    }
+    qDebug()<<"mensaje: "<< message;
+    ui->lbl_message->setText(message);
 
 }
 
